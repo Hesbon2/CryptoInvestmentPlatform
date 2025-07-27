@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoVault - Smart Investment Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a202c 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "💎";
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .balance {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+        }
+
+        /* Dashboard Overview */
+        .dashboard-overview {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .portfolio-summary {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .portfolio-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-change {
+            color: #00ff88;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .portfolio-chart {
+            height: 200px;
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #cbd5e0;
+            font-size: 0.9rem;
+        }
+
+        /* Investment Plans Section */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .investment-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            color: #000;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .plan-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .plan-return {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-period {
+            color: #cbd5e0;
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            padding: 0.5rem 0;
+            color: #e2e8f0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .plan-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .plan-button {
+            width: 100%;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Active Investments */
+        .active-investments {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .investment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .investment-item:last-child {
+            border-bottom: none;
+        }
+
+        .investment-info h4 {
+            color: #ffffff;
+            margin-bottom: 0.3rem;
+        }
+
+        .investment-info p {
+            color: #cbd5e0;
+            font-size: 0.9rem;
+        }
+
+        .investment-value {
+            text-align: right;
+        }
+
+        .investment-amount {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00ff88;
+        }
+
+        .investment-return {
+            font-size: 0.9rem;
+            color: #00d4ff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .dashboard-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .portfolio-value {
+                font-size: 2rem;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+                display: grid;
+            }
+
+            .investment-plans {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .plan-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .plan-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .plan-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">CryptoVault</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#invest">Invest</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#history">History</a></li>
+                </ul>
+            </nav>
+            <div class="user-section">
+                <div class="balance">$24,567.89</div>
+                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #00d4ff, #00ff88); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000;">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Overview -->
+        <section class="dashboard-overview">
+            <div class="portfolio-summary">
+                <h2 style="color: #cbd5e0; margin-bottom: 1rem;">Total Portfolio Value</h2>
+                <div class="portfolio-value">$24,567.89</div>
+                <div class="portfolio-change">+$2,345.67 (+10.55%) this month</div>
+                <div class="portfolio-chart">
+                    <div class="chart-placeholder">📈 Portfolio Growth Chart</div>
+                </div>
+            </div>
+            
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Active Investments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12.5%</div>
+                    <div class="stat-label">Average APY</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$1,234</div>
+                    <div class="stat-label">Monthly Returns</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Investment Plans -->
+        <section>
+            <h2 class="section-title">Choose Your Investment Plan</h2>
+            <div class="investment-plans">
+                <div class="plan-card">
+                    <div class="plan-badge">STARTER</div>
+                    <h3 class="plan-title">Bronze Plan</h3>
+                    <div class="plan-return">8.5%</div>
+                    <p class="plan-period">Annual APY • Min: $100</p>
+                    <ul class="plan-features">
+                        <li>Low risk investment</li>
+                        <li>Monthly payouts</li>
+                        <li>24/7 support</li>
+                        <li>Withdraw anytime</li>
+                    </ul>
+                    <button class="plan-button">Start Investing</button>
+                </div>
+
+                <div class="plan-card">
+                    <div class="plan-badge">POPULAR</div>
+                    <h3 class="plan-title">Silver Plan</h3>
+                    <div class="plan-return">12.5%</div>
+                    <p class="plan-period">Annual APY • Min: $1,000</p>
+                    <ul class="plan-features">
+                        <li>Medium risk investment</li>
+                        <li>Weekly payouts</li>
+                        <li>Priority support</li>
+                        <li>Advanced analytics</li>
+                    </ul>
+                    <button class="plan-button">Start Investing</button>
+                </div>
+
+                <div class="plan-card">
+                    <div class="plan-badge">PREMIUM</div>
+                    <h3 class="plan-title">Gold Plan</h3>
+                    <div class="plan-return">18.0%</div>
+                    <p class="plan-period">Annual APY • Min: $5,000</p>
+                    <ul class="plan-features">
+                        <li>High yield investment</li>
+                        <li>Daily payouts</li>
+                        <li>Dedicated manager</li>
+                        <li>Exclusive opportunities</li>
+                    </ul>
+                    <button class="plan-button">Start Investing</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Active Investments -->
+        <section class="active-investments">
+            <h2 style="color: #ffffff; margin-bottom: 2rem;">Your Active Investments</h2>
+            
+            <div class="investment-item">
+                <div class="investment-info">
+                    <h4>Silver Plan #1</h4>
+                    <p>Started 45 days ago • Next payout in 2 days</p>
+                </div>
+                <div class="investment-value">
+                    <div class="investment-amount">$5,000.00</div>
+                    <div class="investment-return">+$520.50 earned</div>
+                </div>
+            </div>
+
+            <div class="investment-item">
+                <div class="investment-info">
+                    <h4>Bronze Plan #2</h4>
+                    <p>Started 120 days ago • Next payout in 5 days</p>
+                </div>
+                <div class="investment-value">
+                    <div class="investment-amount">$2,000.00</div>
+                    <div class="investment-return">+$680.25 earned</div>
+                </div>
+            </div>
+
+            <div class="investment-item">
+                <div class="investment-info">
+                    <h4>Gold Plan #1</h4>
+                    <p>Started 15 days ago • Next payout tomorrow</p>
+                </div>
+                <div class="investment-value">
+                    <div class="investment-amount">$10,000.00</div>
+                    <div class="investment-return">+$737.50 earned</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Simple interactions
+        document.querySelectorAll('.plan-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const planTitle = this.parentElement.querySelector('.plan-title').textContent;
+                alert(`Opening investment flow for ${planTitle}...`);
+            });
+        });
+
+        // Animate numbers on load
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = '$' + value.toLocaleString() + '.89';
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Animate portfolio value on load
+        window.addEventListener('load', () => {
+            const portfolioValue = document.querySelector('.portfolio-value');
+            animateValue(portfolioValue, 0, 24567, 2000);
+        });
+    </script>
+</body>
+</html>
