@@ -14,7 +14,7 @@ const InvestmentPlanCard: React.FC<Props> = ({ plan, onSelect }) => {
         'glass-card p-6 cursor-pointer transform transition duration-300 hover:scale-105',
         {
           'bg-gradient-to-br from-emerald-500/20 to-emerald-700/30': plan.name === 'Gold',
-          'bg-gradient-to-br from-primary/20 to-primary.dark/30': plan.name === 'Silver',
+          'bg-gradient-to-br from-primary/20 to-primary-dark/30': plan.name === 'Silver',
           'bg-gradient-to-br from-gray-500/20 to-gray-700/30': plan.name === 'Bronze'
         }
       )}
